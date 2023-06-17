@@ -31,6 +31,7 @@ async function test() {
 		frameSize: 1000,
 		audioBitsPerSecond: 128000,
 		videoBitsPerSecond: 5000000,
+		mimeType: "video/webm;codecs=H264",
 		videoConstraints: {
 			mandatory: {
 				minWidth: viewport.width,
