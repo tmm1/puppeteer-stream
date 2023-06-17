@@ -79,6 +79,12 @@ async function test() {
 			width: viewport.width,
 		},
 	});
+	await session.send("Browser.setWindowBounds", {
+		windowId,
+		bounds: {
+			windowState: "minimized",
+		},
+	});
 
 	process.on("SIGINT", async () => {
 		await stream.destroy();
