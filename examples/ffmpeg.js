@@ -35,6 +35,8 @@ async function test() {
 			mandatory: {
 				minWidth: viewport.width,
 				minHeight: viewport.height,
+				maxWidth: viewport.width,
+				maxHeight: viewport.height,
 				minFrameRate: 60,
 			},
 		},
