@@ -25,6 +25,27 @@ async function test() {
 	});
 
 	const page = await browser.newPage();
+	const stream = await getStream(page, {
+		audio: true,
+		video: true,
+		frameSize: 1000,
+		audioBitsPerSecond: 128000,
+		videoBitsPerSecond: 5000000,
+		videoConstraints: {
+			mandatory: {
+				minWidth: viewport.width,
+				minHeight: viewport.height,
+				minFrameRate: 60,
+			},
+		},
+	});
+	// this will pipe the stream to ffmpeg and convert the webm to mkv format (which supports vp8/vp9)
+	const ffmpeg = exec(`ffmpeg -y -i - -c copy output.mkv`);
+	ffmpeg.stderr.on("data", (chunk) => {
+		console.log(chunk.toString());
+	});
+	stream.pipe(ffmpeg.stdin);
+
 	//await page.goto("https://www.nbc.com/live?brand=nbc-news&callsign=nbcnews");
 	await page.goto("https://www.nbc.com/live?brand=cnbc&callsign=cnbc");
 	await page.waitForSelector("video");
@@ -56,29 +77,6 @@ async function test() {
 			width: viewport.width,
 		},
 	});
-
-	const stream = await getStream(page, {
-		audio: true,
-		video: true,
-		frameSize: 1000,
-		audioBitsPerSecond: 128000,
-		videoBitsPerSecond: 5000000,
-		videoConstraints: {
-			mandatory: {
-				minWidth: viewport.width,
-				minHeight: viewport.height,
-				minFrameRate: 60,
-			},
-		},
-	});
-	console.log("recording");
-	// this will pipe the stream to ffmpeg and convert the webm to mkv format (which supports vp8/vp9)
-	const ffmpeg = exec(`ffmpeg -y -i - -c copy output.mkv`);
-	ffmpeg.stderr.on("data", (chunk) => {
-		console.log(chunk.toString());
-	});
-
-	stream.pipe(ffmpeg.stdin);
 
 	process.on("SIGINT", async () => {
 		await stream.destroy();
