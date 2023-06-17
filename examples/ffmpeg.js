@@ -43,6 +43,7 @@ async function test() {
 		video.style.height = "100%";
 		video.style.zIndex = "999000";
 		video.style.background = "black";
+		video.style.cursor = "none";
 		video.play();
 	});
 
