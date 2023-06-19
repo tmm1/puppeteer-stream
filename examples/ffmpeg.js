@@ -4,6 +4,8 @@ const { launch, getStream } = require("../dist/PuppeteerStream");
 const fs = require("fs");
 const { exec } = require("child_process");
 const utils = require("../tests/_utils");
+const process = require("process");
+const path = require("path");
 
 const viewport = {
 	width: 1920,
@@ -19,7 +21,7 @@ async function test() {
 			"--no-first-run",
 			"--disable-infobars",
 			"--hide-crash-restore-bubble",
-			"--user-data-dir=./chromedata",
+			`--user-data-dir=${path.join(process.cwd(), "chromedata")}`,
 		],
 		ignoreDefaultArgs: ["--enable-automation", "--disable-component-update"],
 	});
